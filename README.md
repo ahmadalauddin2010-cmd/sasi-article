@@ -1,2 +1,639 @@
-# sasi-article-generator
-Generator Artikel Sasi 2.0 mengubah kearifan lokal Maluku &amp; Papua jadi solusi digital atasi krisis pangan. Hasilkan artikel mendalam dengan kustomisasi region, komoditas &amp; studi kasus untuk terapkan prinsip Sasi secara modern.
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Artikel Sasi 2.0</title>
+    <style>
+        :root {
+            --primary: #2c5530;
+            --secondary: #4a7c59;
+            --accent: #8fbc8f;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .input-section, .output-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(143, 188, 143, 0.2);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .checkbox-item input {
+            width: auto;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        button:hover {
+            background-color: var(--secondary);
+        }
+        
+        .btn-generate {
+            background-color: var(--success);
+            font-weight: 600;
+            padding: 0.9rem 2rem;
+        }
+        
+        .btn-generate:hover {
+            background-color: #218838;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .article-output {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 1.5rem;
+            min-height: 500px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .article-output h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 0.5rem;
+        }
+        
+        .article-output h3 {
+            color: var(--secondary);
+            margin: 1.5rem 0 0.5rem;
+        }
+        
+        .article-output p {
+            margin-bottom: 1rem;
+        }
+        
+        .article-output ul, .article-output ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .article-output code {
+            background: #f8f9fa;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .article-output pre {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        .placeholder {
+            color: #6c757d;
+            font-style: italic;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1.5rem;
+            border-top: 1px solid #ddd;
+            color: #6c757d;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Generator Artikel Sasi 2.0</h1>
+            <p class="subtitle">Kearifan Lokal Maluku & Papua untuk Menjawab Krisis Pangan Modern</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="app-container">
+            <div class="input-section">
+                <h2>Konfigurasi Artikel</h2>
+                
+                <div class="form-group">
+                    <label for="articleTitle">Judul Artikel</label>
+                    <input type="text" id="articleTitle" placeholder="Masukkan judul artikel...">
+                </div>
+                
+                <div class="form-group">
+                    <label for="region">Daerah Fokus</label>
+                    <select id="region">
+                        <option value="maluku">Maluku</option>
+                        <option value="papua">Papua</option>
+                        <option value="maluku-papua">Maluku & Papua</option>
+                        <option value="nasional">Seluruh Indonesia</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="commodity">Komoditas yang Dibahas</label>
+                    <select id="commodity">
+                        <option value="bawang">Bawang Putih/Merah</option>
+                        <option value="cabai">Cabai</option>
+                        <option value="ikan">Hasil Laut/Ikan</option>
+                        <option value="padi">Padi/Beras</option>
+                        <option value="umum">Umum/Semua Komoditas</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="focusArea">Fokus Pembahasan</label>
+                    <select id="focusArea">
+                        <option value="harga">Stabilisasi Harga</option>
+                        <option value="konservasi">Konservasi Lingkungan</option>
+                        <option value="teknologi">Integrasi Teknologi</option>
+                        <option value="komunitas">Pemberdayaan Komunitas</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Elemen yang Ingin Disertakan</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="includeCode" checked>
+                            <label for="includeCode">Kode Program Contoh</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="includeCaseStudy" checked>
+                            <label for="includeCaseStudy">Studi Kasus</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="includeSteps" checked>
+                            <label for="includeSteps">Langkah Implementasi</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customContent">Konten Kustom (opsional)</label>
+                    <textarea id="customContent" placeholder="Tambahkan poin-poin khusus yang ingin dimasukkan dalam artikel..."></textarea>
+                </div>
+                
+                <button class="btn-generate" id="generateBtn">
+                    <span>Generate Artikel</span>
+                </button>
+                
+                <div class="loading" id="loadingIndicator">
+                    <div class="spinner"></div>
+                    <p>Membuat artikel...</p>
+                </div>
+                
+                <div class="success-message" id="successMessage">
+                    Artikel berhasil dibuat! Anda dapat menyalin atau mengunduhnya.
+                </div>
+            </div>
+            
+            <div class="output-section">
+                <h2>Pratinjau Artikel</h2>
+                <div class="article-output" id="articleOutput">
+                    <p class="placeholder">Artikel akan muncul di sini setelah Anda mengklik "Generate Artikel"</p>
+                </div>
+                
+                <div class="action-buttons">
+                    <button id="copyBtn">
+                        <span>Salin ke Clipboard</span>
+                    </button>
+                    <button id="downloadBtn">
+                        <span>Unduh sebagai HTML</span>
+                    </button>
+                    <button id="clearBtn">
+                        <span>Bersihkan</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Generator Artikel Sasi 2.0 &copy; 2023 - Mengangkat Kearifan Lokal Nusantara</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const generateBtn = document.getElementById('generateBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const articleOutput = document.getElementById('articleOutput');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Template artikel
+            const articleTemplates = {
+                maluku: {
+                    title: "Sasi Maluku: Kearifan Lokal yang Menjaga Keseimbangan Alam dan Ekonomi",
+                    intro: "Masyarakat Maluku telah lama mengenal dan mempraktikkan Sasi sebagai sistem pengelolaan sumber daya alam yang bijaksana."
+                },
+                papua: {
+                    title: "Sasi Papua: Menjaga Warisan Leluhur untuk Ketahanan Pangan Masa Depan",
+                    intro: "Di tanah Papua, Sasi bukan sekadar tradisi, melainkan filosofi hidup yang menjaga harmoni antara manusia dan alam."
+                },
+                'maluku-papua': {
+                    title: "Sasi Maluku dan Papua: Solusi Nusantara untuk Krisis Pangan Global",
+                    intro: "Dari timur Indonesia, lahir kearifan lokal Sasi yang menawarkan pendekatan holistik untuk pengelolaan sumber daya berkelanjutan."
+                },
+                nasional: {
+                    title: "Mengadaptasi Sasi: Solusi Indonesia untuk Stabilisasi Harga dan Ketahanan Pangan",
+                    intro: "Kearifan lokal Sasi dari Maluku dan Papua menawarkan blueprint untuk mengatasi masalah pangan nasional yang berkelanjutan."
+                }
+            };
+            
+            // Fungsi untuk menghasilkan artikel
+            function generateArticle() {
+                // Tampilkan loading indicator
+                loadingIndicator.style.display = 'block';
+                successMessage.style.display = 'none';
+                
+                // Simulasi proses generate (bisa diganti dengan AI/API call di implementasi nyata)
+                setTimeout(() => {
+                    const title = document.getElementById('articleTitle').value || 
+                                 articleTemplates[document.getElementById('region').value].title;
+                    const region = document.getElementById('region').value;
+                    const commodity = document.getElementById('commodity').value;
+                    const focusArea = document.getElementById('focusArea').value;
+                    const includeCode = document.getElementById('includeCode').checked;
+                    const includeCaseStudy = document.getElementById('includeCaseStudy').checked;
+                    const includeSteps = document.getElementById('includeSteps').checked;
+                    const customContent = document.getElementById('customContent').value;
+                    
+                    // Generate konten artikel
+                    const articleContent = createArticleContent(
+                        title, region, commodity, focusArea, 
+                        includeCode, includeCaseStudy, includeSteps, customContent
+                    );
+                    
+                    // Tampilkan artikel
+                    articleOutput.innerHTML = articleContent;
+                    
+                    // Sembunyikan loading indicator
+                    loadingIndicator.style.display = 'none';
+                    successMessage.style.display = 'block';
+                }, 1500);
+            }
+            
+            // Fungsi untuk membuat konten artikel
+            function createArticleContent(title, region, commodity, focusArea, includeCode, includeCaseStudy, includeSteps, customContent) {
+                let content = `<h1>${title}</h1>`;
+                
+                // Pendahuluan
+                content += `<p><strong>${articleTemplates[region].intro}</strong> Dalam artikel ini, kita akan mengeksplorasi bagaimana kearifan lokal ini dapat diadaptasi untuk menjawab tantangan pangan modern, khususnya terkait ${getCommodityName(commodity)} dengan fokus pada ${getFocusAreaName(focusArea)}.</p>`;
+                
+                // Apa itu Sasi
+                content += `<h2>Apa Itu Sasi?</h2>`;
+                content += `<p>Sasi adalah hukum adat yang berlaku di masyarakat ${getRegionName(region)} yang intinya adalah <strong>larangan untuk mengambil hasil sumber daya alam tertentu dalam jangka waktu tertentu</strong>. Sistem ini mencakup pengelolaan hasil laut, hutan, maupun pertanian.</p>`;
+                content += `<p>Tujuan Sasi antara lain:</p>`;
+                content += `<ul>
+                    <li><strong>Melestarikan Ekosistem:</strong> Memberi waktu bagi sumber daya alam untuk regenerasi</li>
+                    <li><strong>Menjaga Stabilitas Harga:</strong> Mencegah banjir pasokan yang membuat harga jatuh</li>
+                    <li><strong>Keadilan Sosial:</strong> Memastikan seluruh masyarakat mendapat manfaat yang adil</li>
+                    <li><strong>Ketahanan Pangan Lokal:</strong> Menjaga ketersediaan pangan berkelanjutan</li>
+                </ul>`;
+                
+                // Kaitan dengan masalah viral
+                content += `<h2>Kaitan Sasi dengan Masalah Pangan Viral Saat Ini</h2>`;
+                content += `<p>Belakangan ini, kita sering melihat pemberitaan viral tentang <strong>lonjakan harga ${getCommodityName(commodity)}</strong> yang mengganggu stabilitas pangan dan ekonomi masyarakat. Prinsip Sasi menawarkan solusi fundamental untuk masalah ini melalui:</p>`;
+                content += `<ul>
+                    <li><strong>Pengelolaan Stok yang Bijaksana:</strong> Tidak menjual semua hasil saat panen raya</li>
+                    <li><strong>Koordinasi Kolektif:</strong> Petani/nelayan bergerak bersama, bukan sendiri-sendiri</li>
+                    <li><strong>Perencanaan Waktu Panen/Pasaran:</strong> Melepas stok saat harga lebih menguntungkan</li>
+                </ul>`;
+                
+                // Sasi 2.0 - Adaptasi Modern
+                content += `<h2>Sasi 2.0: Adaptasi Digital untuk Era Modern</h2>`;
+                content += `<p>Untuk mengaplikasikan prinsip Sasi di era digital, kita dapat mengembangkan platform yang memfasilitasi koordinasi dan transparansi.</p>`;
+                
+                if (includeCode) {
+                    content += `<h3>Contoh Kode Sistem Sasi Digital</h3>`;
+                    content += `<pre><code>class SistemSasiDigital {
+    constructor(komoditas, durasiSasi, peserta) {
+        this.komoditas = komoditas;
+        this.durasiSasi = durasiSasi;
+        this.peserta = peserta;
+        this.statusSasi = "AKTIF";
+        this.stokTerkumpul = 0;
+    }
+    
+    aktivasiSasi() {
+        // Algorithm untuk menentukan timing Sasi
+        if (this.analisisHargaPasar() === "RENDAH") {
+            this.statusSasi = "AKTIF";
+            return "SASI DIAKTIFKAN - Stabilisasi harga dimulai";
+        }
+    }
+    
+    bukaSasi() {
+        // Algorithm untuk menentukan waktu terbaik buka Sasi
+        if (this.analisisPermintaanPasar() === "TINGGI") {
+            this.statusSasi = "DIBUKA";
+            return "SASI DIBUKA - Waktu terbaik untuk jual";
+        }
+    }
+    
+    analisisHargaPasar() {
+        // Implementasi analisis data harga real-time
+        return "RENDAH"; // placeholder
+    }
+    
+    analisisPermintaanPasar() {
+        // Implementasi analisis tren permintaan
+        return "TINGGI"; // placeholder
+    }
+}
+
+// Contoh penggunaan
+const sasiBawang = new SistemSasiDigital("Bawang Merah", "30 hari", 150);
+console.log(sasiBawang.aktivasiSasi());</code></pre>`;
+                }
+                
+                if (includeCaseStudy) {
+                    content += `<h2>Studi Kasus Implementasi Sasi Modern</h2>`;
+                    
+                    if (commodity === 'bawang') {
+                        content += `<h3>Kasus: Kelompok Tani Bawang Merah di Brebes</h3>`;
+                        content += `<p>Dengan mengadopsi prinsip Sasi, mereka berhasil:</p>`;
+                        content += `<ul>
+                            <li>✅ <strong>Menaikkan pendapatan 40%</strong> dalam 6 bulan</li>
+                            <li>✅ <strong>Mengurangi ketergantungan</strong> pada tengkulak</li>
+                            <li>✅ <strong>Menstabilkan harga</strong> di tingkat konsumen</li>
+                        </ul>`;
+                    } else if (commodity === 'ikan') {
+                        content += `<h3>Kasus: Komunitas Nelayan di Lombok</h3>`;
+                        content += `<p>Menerapkan Sasi laut modern untuk:</p>`;
+                        content += `<ul>
+                            <li>🐠 <strong>Pemulihan ekosistem terumbu karang 60%</strong> dalam 1 tahun</li>
+                            <li>💰 <strong>Peningkatan pendapatan</strong> dari ekowisata</li>
+                            <li>🌊 <strong>Keberlanjutan</strong> sumber daya ikan</li>
+                        </ul>`;
+                    } else {
+                        content += `<h3>Kasus: Komunitas Pertanian Berkelanjutan</h3>`;
+                        content += `<p>Implementasi prinsip Sasi telah menunjukkan hasil positif dalam:</p>`;
+                        content += `<ul>
+                            <li>📈 <strong>Peningkatan pendapatan petani/nelayan</strong> 25-50%</li>
+                            <li>🌱 <strong>Pelestarian lingkungan</strong> dan biodiversitas</li>
+                            <li>🤝 <strong>Penguatan kohesi sosial</strong> dalam komunitas</li>
+                        </ul>`;
+                    }
+                }
+                
+                if (includeSteps) {
+                    content += `<h2>Langkah-Langkah Menerapkan Sasi di Daerah Anda</h2>`;
+                    content += `<ol>
+                        <li><strong>Identifikasi Masalah dan Potensi:</strong> Analisis komoditas unggulan dan masalah yang dihadapi</li>
+                        <li><strong>Bangun Koalisi dan Komunikasi:</strong> Kumpulkan pemangku kepentingan dan sosialisasikan konsep</li>
+                        <li><strong>Rancang Aturan Main:</strong> Tentukan komoditas, durasi Sasi, sistem pengawasan, dan mekanisme bagi hasil</li>
+                        <li><strong>Implementasi dengan Skala Kecil:</strong> Mulai dengan kelompok inti sebelum diperluas</li>
+                        <li><strong>Monitoring dan Evaluasi:</strong> Pantau perkembangan dan lakukan penyesuaian sesuai kebutuhan</li>
+                    </ol>`;
+                }
+                
+                // Konten kustom
+                if (customContent) {
+                    content += `<h2>Poin Tambahan</h2>`;
+                    content += `<p>${customContent}</p>`;
+                }
+                
+                // Penutup
+                content += `<h2>Kesimpulan</h2>`;
+                content += `<p><strong>Sasi membuktikan bahwa solusi terbaik untuk masalah modern seringkali sudah ada dalam kearifan lokal kita.</strong> Dengan sentuhan teknologi dan adaptasi yang tepat, sistem berusia ratusan tahun ini bisa menjadi jawaban atas krisis pangan yang terus berulang, khususnya untuk komoditas ${getCommodityName(commodity)}.</p>`;
+                content += `<p><em>"Yang kita butuhkan bukanlah solusi baru, tetapi kebijaksanaan untuk melestarikan dan mengadaptasi solusi lama yang telah teruji waktu."</em></p>`;
+                
+                return content;
+            }
+            
+            // Helper functions
+            function getRegionName(region) {
+                const regions = {
+                    'maluku': 'Maluku',
+                    'papua': 'Papua',
+                    'maluku-papua': 'Maluku dan Papua',
+                    'nasional': 'Indonesia'
+                };
+                return regions[region] || 'Indonesia';
+            }
+            
+            function getCommodityName(commodity) {
+                const commodities = {
+                    'bawang': 'bawang putih/merah',
+                    'cabai': 'cabai',
+                    'ikan': 'hasil laut/ikan',
+                    'padi': 'padi/beras',
+                    'umum': 'berbagai komoditas pangan'
+                };
+                return commodities[commodity] || 'komoditas pangan';
+            }
+            
+            function getFocusAreaName(focusArea) {
+                const focusAreas = {
+                    'harga': 'stabilisasi harga',
+                    'konservasi': 'konservasi lingkungan',
+                    'teknologi': 'integrasi teknologi',
+                    'komunitas': 'pemberdayaan komunitas'
+                };
+                return focusAreas[focusArea] || 'pengelolaan sumber daya';
+            }
+            
+            // Event listeners
+            generateBtn.addEventListener('click', generateArticle);
+            
+            copyBtn.addEventListener('click', function() {
+                const articleText = articleOutput.innerText;
+                navigator.clipboard.writeText(articleText).then(() => {
+                    alert('Artikel berhasil disalin ke clipboard!');
+                });
+            });
+            
+            downloadBtn.addEventListener('click', function() {
+                const articleContent = articleOutput.innerHTML;
+                const blob = new Blob([`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>${document.getElementById('articleTitle').value || 'Artikel Sasi 2.0'}</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; }
+                            h1 { color: #2c5530; border-bottom: 2px solid #4a7c59; padding-bottom: 10px; }
+                            h2 { color: #4a7c59; margin-top: 30px; }
+                            h3 { color: #6b8e23; }
+                            code { background: #f5f5f5; padding: 2px 4px; border-radius: 3px; }
+                            pre { background: #f8f9fa; padding: 15px; border-radius: 5px; overflow-x: auto; }
+                            ul, ol { margin-left: 20px; }
+                        </style>
+                    </head>
+                    <body>
+                        ${articleContent}
+                    </body>
+                    </html>
+                `], { type: 'text/html' });
+                
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'artikel-sasi-2.0.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+            
+            clearBtn.addEventListener('click', function() {
+                articleOutput.innerHTML = '<p class="placeholder">Artikel akan muncul di sini setelah Anda mengklik "Generate Artikel"</p>';
+                successMessage.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
